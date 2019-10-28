@@ -1,0 +1,6 @@
+##################### Instructions to execute these Programs #####################
+These programs are written in Python and to execute these programs you need to have Google OR-Tools installed in your pc.
+If OR-Tools already installed then simply just write 
+futoshiki.py 
+kakuros.py 
+in your CMD to execute these...
