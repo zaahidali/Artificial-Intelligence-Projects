@@ -15,7 +15,8 @@ For Linux
 
 use these two commands to install the libraries
 
- sudo apt-get install python3-matplotlib
- sudo apt-get install numpy
+1) sudo apt-get install python3-matplotlib
+ 
+ 2) sudo apt-get install numpy
 
 
