@@ -1,6 +1,6 @@
-################### The program has been written in Pycharm ###################
+################### The IDE used for this code is Pycharm ###################
 
-To execute the program you need to install 2 utilities
+To execute the code you need to install 2 utilities
 
 For Windows
 
