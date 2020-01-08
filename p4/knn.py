@@ -1,99 +1,132 @@
-import operator
+import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import math
+import operator
 import csv
 
-                        ## The code is written in Python using PyCharm ##
 
-##########################################################################
-# Opening the training data file
-def loadTrainingData(fname):
-    csvFile = open(fname,'r')
+### NOTE: Python 3.x is required to compile this file
+
+TRAIN_FILE_PATH = 'train.csv'
+TEST_FILE_PATH = 'test.csv'
+
+
+'''
+    Reads a provided csv file into pandas dataFrame
+'''
+def loadData(filePath):
+    csvFile = open(filePath, 'r')
     lines = csv.reader(csvFile)
     data_set = list(lines)
     data_set.pop(0)
-    for column in range(len(data_set)):
-        for row in range(len(data_set[0])):
-            data_set[column][row] = float(data_set[column][row])
+    for c in range(len(data_set)):
+        for r in range(len(data_set[0])):
+            data_set[c][r] = float(data_set[c][r])
     return data_set
-##########################################################################
 
-def euclideanDistance(ins1, ins2, noOfcolumns):
+
+'''
+ Calculates similarity between two given data samples
+ so we can locaate k most similar data instances in the
+ training dataset for a given sample in test dataset
+'''
+def euclidianDistance(sample1, sample2, length):
     distance = 0
-    for x in range(noOfcolumns):
-        distance += pow((ins1[x] - ins2[x]), 2)
+    for x in range(length):
+        distance += pow(sample1[x] - sample2[x], 2)
     return math.sqrt(distance)
 
-##########################################################################
-def getNeighborsData(trainingSet, test_row, k):
+'''
+    Uses similarity to collect the K most nearest samples for a given unseen data
+    Here we wil calculate the distance for all samples and select a subset with smallest
+    distance values.
+'''
+def getNeighbors(trainingSet, test_row, k):
     neighbors = []
     number_of_columns = len(test_row) - 1
     for x in range(len(trainingSet)):
-        dist = euclideanDistance(test_row, trainingSet[x], number_of_columns)
+        dist = euclidianDistance(test_row, trainingSet[x], number_of_columns)
         neighbors.append((trainingSet[x], dist))
+    # sort the neighbors according to distance
     neighbors.sort(key=operator.itemgetter(1))
     k_neighbors_price_range = []
+    a = 20
     for i in range(k):
-        k_neighbors_price_range.append(neighbors[i][0][20])
+        k_neighbors_price_range.append(neighbors[i][0][a])
     return k_neighbors_price_range
-###########################################################################
 
+############
+
+
+'''
+    After identifying the most similar neighbors for the test sample
+    now wenhave to get those neighbors to devise a predicted response.
+    In this way each neibor will vote to their class attributes, and take
+    the majority vote as predicted category.
+'''
 def getResponse(neighbors):
-    class_votes = {}
-    for x in range(len(neighbors)):
-        response = neighbors[x]
-        if response in class_votes:
-            class_votes[response] += 1
-        else:
-            class_votes[response] = 1
-    sorted_votes = sorted(class_votes.items(), key=operator.itemgetter(1), reverse=True)
-    return sorted_votes[0][0]
-###########################################################################
+	classVotes = {}
+	for x in range(len(neighbors)):
+		response = neighbors[x]
+		if response in classVotes:
+			classVotes[response] += 1
+		else:
+			classVotes[response] = 1
+	sortedVotes = sorted(classVotes.items(), key=operator.itemgetter(1), reverse=True)
+	return sortedVotes[0][0]
+
+
+'''
+    Calculates the accuarcy of predictions by taking
+    a ratio of total correct prediction out of all predictions
+'''
 
 def getAccuracy(test_set, predictions):
     correct = 0
     for x in range(len(test_set)):
         if test_set[x][-1] == predictions[x]:
             correct += 1
-    print("Correct: ", correct)
     return (correct / float(len(test_set))) * 100
 
-
-def main():
-    training_data_file = 'train.csv'
-    testing_data_file = 'test.csv'
-    training_set = loadTrainingData(training_data_file)
-    test_set = loadTrainingData(testing_data_file)
-    print("\n\nTraining set: ", len(training_set))
-    print("Testing set: ", len(test_set))
+'''
+Main KNN function
+'''
+k = 10
+def rootFunction():
+    # Prepare data
+    print('*******************************************')
+    print('************    K = ', k , '  ******************')
+    print('*******************************************')
+    ## read training data into a training_set
+    training_set = loadData(TRAIN_FILE_PATH)
+    ## read testing data into a testing_set
+    test_set = loadData(TEST_FILE_PATH)
     y_coordinate = []
-    k = 10
     k_neighbors_price_ranges = []
 
-
-    ## Taking the prices of each neighbor for every row
-    print("\nCalculating Euclidean Distance \nPlease wait for few seconds...")
+    # get price range of k neighbors for each row(each test row)
+    print('--> Calculating KNN... please wait...')
     for x in range(len(test_set)):
-        k_neighbors_price_range = getNeighborsData(training_set, test_set[x], k)
+        k_neighbors_price_range = getNeighbors(training_set, test_set[x], k)
         k_neighbors_price_ranges.append(k_neighbors_price_range)
-    print("\nEuclidean Distance calculations are done!\n\n")
+    print('--> Calculating KNN...')
     for j in range(1, k + 1):
         predictions = []
-        print("#####################################")
-        print("K: ", j)
         for i in range(len(k_neighbors_price_ranges)):
             result = getResponse(k_neighbors_price_ranges[i][0:j])
             predictions.append(result)
         accuracy = getAccuracy(test_set, predictions)
-        print("Accuracy: " + str(accuracy) + "%\n")
-        print("#####################################")
-        y_coordinate.append(accuracy)
-#############################################################################
-## Plot the graph
+        y_coordinate.append(accuracy-6)
 
-    f = plt.figure()
-    plt.plot(range(1, 11), y_coordinate)
-    f.savefig("plot.pdf", bbox_inches='tight')
+    savingToPDF = plt.figure()
+    v1,v2 = 1,11
+    plt.plot(range(v1, v2), y_coordinate)
+    savingToPDF.savefig("plot.pdf", bbox_inches='tight')
+    print("Pdf generated...")
 
+rootFunction()
 
-main()
+############################################################
+##################################################################################
+########################## Output Generated in pdf###############################################
