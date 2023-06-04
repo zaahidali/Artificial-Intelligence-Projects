@@ -19,7 +19,6 @@ def DisplayAndShowThePlot():
             draw.scatter(x, y,  color=color,marker="*", s=50)
         draw.title('For K = ' + "5")
         plotGraph.savefig("plot.pdf", bbox_inches='tight')
-#///////////////////////////////////////////////////////////////
 
 green = 'green'
 red = 'red'
@@ -28,7 +27,6 @@ brown = 'brown'
 pink = 'pink'
 colors = [green, red, pink, blue, brown]
 
-'//////////////////////////////////////////////////////////////'
 SetData = list()
 def ReadDataFromFile():
     f1 = 1
@@ -38,7 +36,6 @@ def ReadDataFromFile():
     for element in lines[f1:]:
         item = [int(i.strip()) for i in element.split(comma)]
         SetData.append(item)
-'//////////////////////////////////////////////////////////////'
 ReadDataFromFile()
 
 def CalculateXYaxisValues(SetData):
@@ -48,8 +45,6 @@ def CalculateXYaxisValues(SetData):
         x_axis.append(i[a0][a0])
         y_axis.append(i[a0][a1])
     return [x_axis, y_axis]
-#///////////////////////////////////////////////////////////////
-
 
 ForMinValues = 'min_%d'
 ForMaxValues = 'max_%d'
@@ -78,7 +73,6 @@ def setCentroids(data_set, k):
         cpoint.append(xymeans)
     return cpoint
 
-
 def Meanmeans(means):
     dimension_number = len(means[0])
     center = list()
@@ -89,7 +83,6 @@ def Meanmeans(means):
         center.append(total / float(len(means)))
     return center
 
-
 def update(data_set, data_setting):
     new_means = dictionary(list)
     centroids_P = list()
@@ -99,13 +92,11 @@ def update(data_set, data_setting):
         centroids_P.append(Meanmeans(means))
     return centroids_P
 
-#/////////////////////////////////////////////
 def calculate_distance(x2,x1):
     res = 0
     for values in range(len(x2) - 1):
         res = res+  pow((x2[values] - x1[values]), 2)
     return take.sqrt(res)
-#////////////////////////////////////////////
 
 def XYmeans(data_means, cpoint):
     measure = list()
@@ -120,7 +111,6 @@ def XYmeans(data_means, cpoint):
         measure.append(first)
     return measure
 
-
 def MainProgram(SetData, k):
     old_Values = None
     cpoint = setCentroids(SetData, k)
@@ -134,7 +124,5 @@ def MainProgram(SetData, k):
     for i, color in zip(final_cpoint, colors):
         draw.scatter(i[0], i[1], s=100)
     return Values
-
-
 
 DisplayAndShowThePlot()
