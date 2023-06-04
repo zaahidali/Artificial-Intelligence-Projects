@@ -308,7 +308,7 @@ while (x < genNumber):
 ##################################################################
 weight = value_weight_calculate(population)
 values = FitnessCalculate(population)
-max_index = 0
+max_index = 0   
 max = 0
 for index, first in enumerate(values):
     if first > max:

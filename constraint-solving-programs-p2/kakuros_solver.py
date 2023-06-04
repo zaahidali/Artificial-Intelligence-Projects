@@ -1,4 +1,3 @@
-############# Zahid Ali #############
 ############# Kakuros Solver ###########
 
 from __future__ import absolute_import
@@ -47,12 +46,10 @@ def Kakuros(list):
     model.AddAllDifferent(Column1)
     model.AddAllDifferent(Column2)
     model.AddAllDifferent(Column3)
-    
 	
 	# With Solver and Solves the model
     solver = cp_model.CpSolver()
     status = solver.Solve(model)
-	
 	
     if status == cp_model.FEASIBLE:
         return [solver.Value(a1), solver.Value(a2), solver.Value(a3),
@@ -68,7 +65,6 @@ with open("kakuro_input.txt", "r") as inputFile:
             elements.append(int(item))
 
 result = Kakuros(elements)
-
 
 ## Print the results to file	
 with open("kakuro_output.txt", "w+")as outputFile:
